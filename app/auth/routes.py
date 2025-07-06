@@ -22,7 +22,7 @@ async def signup(user:UserCreate,db:AsyncSession=Depends(get_db)):
         )
 
     new_user = User(
-        full_name = user.full_name ,
+        fullname = user.fullname ,
         email = user.email,
         password = hash_password(user.password)       
     )    
@@ -32,10 +32,11 @@ async def signup(user:UserCreate,db:AsyncSession=Depends(get_db)):
     await db.refresh(new_user)
 
     token = create_access_token(data={"sub": new_user.email})
+    print(token)
 
     return {
         "id": new_user.id,
-        "username": new_user.full_name,
+        "fullname": new_user.fullname,
         "email": new_user.email,
         "access_token": token,
         "token_type": "bearer"

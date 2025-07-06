@@ -2,13 +2,15 @@ from pydantic import BaseModel, EmailStr
 
 
 class UserCreate(BaseModel):
-    full_name: str
+    fullname: str
     email: EmailStr
     password: str
 
 class UserRead(BaseModel):
-    full_name: str
+    fullname: str
     email: EmailStr
+    access_token: str
+    token_type: str
 
     class Config:
         orm_mode = True
