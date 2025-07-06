@@ -9,3 +9,5 @@ class User(Base):
     password = Column(String)
     fullname = Column(String)
 
+
+

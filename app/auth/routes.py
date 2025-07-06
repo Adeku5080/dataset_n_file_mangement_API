@@ -3,8 +3,8 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
 from app.database import get_db
-from app.models import User
-from app.schemas import UserCreate, UserRead,UserLogin
+from app.auth.models import User
+from app.auth.schemas import UserCreate, UserRead,UserLogin
 from app.auth.utils import hash_password,create_access_token,verify_password
 
 router = APIRouter()
@@ -32,7 +32,6 @@ async def signup(user:UserCreate,db:AsyncSession=Depends(get_db)):
     await db.refresh(new_user)
 
     token = create_access_token(data={"sub": new_user.email})
-    print(token)
 
     return {
         "id": new_user.id,
