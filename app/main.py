@@ -1,10 +1,13 @@
-# main.py
 from fastapi import FastAPI, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
-from database import Base, engine, AsyncSessionLocal
-import models
+from app.database import Base, engine, AsyncSessionLocal
+from app.auth.routes import router as auth_router
+import app.models
 
 app = FastAPI()
+
+app.include_router(auth_router, prefix="/auth", tags=["Auth"])
+
 
 # Create tables on startup
 @app.on_event("startup")
@@ -20,3 +23,4 @@ async def get_db():
 @app.get("/")
 async def root():
     return {"message": "Connected to PostgreSQL!"}
+
