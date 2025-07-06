@@ -4,8 +4,8 @@ from sqlalchemy.future import select
 
 from app.database import get_db
 from app.models import User
-from app.schemas import UserCreate, UserRead
-from app.auth.utils import hash_password,create_access_token
+from app.schemas import UserCreate, UserRead,UserLogin
+from app.auth.utils import hash_password,create_access_token,verify_password
 
 router = APIRouter()
 
@@ -41,3 +41,31 @@ async def signup(user:UserCreate,db:AsyncSession=Depends(get_db)):
         "access_token": token,
         "token_type": "bearer"
     }
+
+@router.post("/login",response_model= UserRead,status_code=status.HTTP_200_OK)
+async def login(userCredentials:UserLogin,db:AsyncSession=Depends(get_db)):
+        result = await db.execute(select(User).where(User.email == userCredentials.email))
+        user = result.scalar_one_or_none()
+
+        if not user or not verify_password(userCredentials.password, user.password):
+            raise HTTPException(
+                status_code=status.HTTP_401_UNAUTHORIZED,
+                detail="Invalid email or password"
+            )
+
+        token = create_access_token({"sub": user.email})
+        return {
+            "id": user.id,
+            "fullname": user.fullname,
+            "email": user.email,
+            "access_token": token,
+            "token_type": "bearer"
+       }
+
+
+        
+
+
+
+
+

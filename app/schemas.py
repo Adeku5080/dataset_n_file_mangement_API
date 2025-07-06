@@ -12,5 +12,9 @@ class UserRead(BaseModel):
     access_token: str
     token_type: str
 
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str    
+
     class Config:
         orm_mode = True
