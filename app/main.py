@@ -2,11 +2,15 @@ from fastapi import FastAPI, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 from app.database import Base, engine, AsyncSessionLocal
 from app.auth.routes import router as auth_router
+from app.datasets.routes import router as dataset_router
 import app.auth.models
+import app.datasets.models
 
 app = FastAPI()
 
 app.include_router(auth_router, prefix="/auth", tags=["Auth"])
+app.include_router(dataset_router, prefix="/dataset", tags=["Dataset"])
+
 
 
 # Create tables on startup
