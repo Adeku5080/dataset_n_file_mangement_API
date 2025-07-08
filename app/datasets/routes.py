@@ -6,9 +6,10 @@ from app.auth.dependencies import get_current_user
 from app.database import get_db
 from app.datasets.models import Dataset
 from app.datasets.schemas import DatasetCreate, DatasetRead
-from app.auth.models import User  
+from app.auth.models import User
 
 router = APIRouter()
+
 
 @router.post("/", response_model=DatasetRead, status_code=status.HTTP_201_CREATED)
 async def create(
