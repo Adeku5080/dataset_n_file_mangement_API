@@ -12,11 +12,11 @@ from app.utils import generate_part_url, start_upload
 
 router = APIRouter()
 
-@router.post("/files/start")
+@router.post("/start")
 def start_multipart_upload(filename: str):
     return start_upload(filename)
 
-@router.post("/files/presign-part")
+@router.post("/presign-part")
 def get_presigned_part_url(key: str, upload_id: str, part_number: int):
     return generate_part_url(key, upload_id, part_number)
 
