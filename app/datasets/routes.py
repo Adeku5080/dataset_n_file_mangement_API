@@ -34,7 +34,8 @@ async def create(
     new_dataset = Dataset(
         title=dataset.title,
         tags=dataset.tags,
-        user_id=current_user.id
+        user_id=current_user.id,
+        dataset_metadata=dataset.dataset_metadata
     )
 
     db.add(new_dataset)
