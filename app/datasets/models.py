@@ -1,6 +1,6 @@
 from sqlalchemy import Column, Index, Integer, String,ForeignKey,Text, UniqueConstraint
 from app.database import Base
-from sqlalchemy.dialects.postgresql import ARRAY ,JSONB
+from sqlalchemy.dialects.postgresql import ARRAY ,JSONB,TSVECTOR
 from sqlalchemy.orm import relationship
 
 class Dataset(Base):
@@ -11,12 +11,14 @@ class Dataset(Base):
     user_id = Column(Integer, ForeignKey("users.id"), index=True)
     tags = Column(ARRAY(Text), default=[])
     dataset_metadata = Column(JSONB, nullable=False) 
+    search_vector = Column(TSVECTOR)
 
     user = relationship("User", back_populates="datasets")  
 
     table_args__ = (
         Index("ix_datasets_tags_gin", "tags", postgresql_using="gin"),
         Index("ix_datasets_metadata_gin", "dataset_metadata", postgresql_using="gin"),
+        Index("ix_datasets_search_vector", "search_vector", postgresql_using="gin"),
     )
 
 

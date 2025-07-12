@@ -1,4 +1,5 @@
-from fastapi import APIRouter, Depends, HTTPException, status
+from fastapi import APIRouter, Depends, HTTPException, status,Query
+from sqlalchemy import text
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 
@@ -99,3 +100,18 @@ async def delete(
 ):
     # Delete implementation here
     pass
+
+
+@router.get("/search", status_code=status.HTTP_200_OK)
+async def search_datasets(
+    q: str = Query(..., min_length=1),
+    db: AsyncSession = Depends(get_db)
+):
+    stmt = text("""
+        SELECT * FROM datasets
+        WHERE search_vector @@ phraseto_tsquery(:query)
+        ORDER BY ts_rank(search_vector, plainto_tsquery(:query)) DESC
+    """)
+    result = await db.execute(stmt, {"query": q})
+    rows = result.mappings().all()  # this gives you dicts instead of tuples
+    return rows
